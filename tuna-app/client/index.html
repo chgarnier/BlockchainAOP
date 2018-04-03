@@ -1,0 +1,254 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Traçabilité des Olives AOP</title>
+    <link rel="icon" href="favicon.png" type="image/gif">
+
+    <!-- require jquery and bootstrap scripts -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    
+    <!-- adding style here -->
+    <style type="text/css">
+      header{
+        background-color: deepskyblue;
+        font-size:20px;
+        padding:15px;
+      }
+      header, .form-group{
+        margin-bottom: 3%;
+      }
+      .form-group{
+        width:50%;
+      }
+      #body{
+        margin-left:3%;
+        margin-right:3%;
+      }
+      .form-control{
+        margin: 8px;
+      }
+      #right_header{
+        width:20%;
+        font-size:15px;
+        margin-right:0px;
+      }
+      #left_header{
+        margin-left:0;
+        width:40%;
+        display:inline-block;
+      } 
+      #id {
+        width:49%;
+        display: inline-block;
+      }
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+      tr:nth-child(even) {
+          background-color: #dddddd;
+      }
+      #onglets {
+        position : absolute;
+        border : 1px solid transparent;
+        padding : 0;
+        font : bold 22px Batang, arial, serif;
+        list-style-type : none;
+        left : 50%;
+        margin-top : 0;
+        width : 430px;
+        margin-left : -215px; /* la moitié de width */
+      }
+
+      #onglets li {
+        float : left;
+        height : 42px; /* à modifier suivant la taille de la police pour centrer le texte dans l'onglet */
+        background-color: #F4F9FD;
+        margin : 2px 2px 0 2px !important;  /* Pour les navigateurs autre que IE */
+        margin : 1px 2px 0 2px;  /* Pour IE  */
+        border : 1px solid #9EA0A1;
+      }
+      #onglets li.active {
+         border-bottom: 1px solid #fff;
+         background-color: #fff;
+      }
+      #onglets a {
+        display : block;
+        color : #666;
+        text-decoration : none;
+        padding : 4px;
+      }
+      #onglets a:hover {
+        background : #fff;
+      }
+      #menu {
+        border-bottom : 1px solid #9EA0A1;
+        padding-bottom : 50px;
+      }
+
+
+    </style>
+  </head>
+
+
+  
+  
+  <body ng-app="application" ng-controller="appController">
+    <header>
+      <div id="top_center_header">Traçabilité des Olives AOP </div>
+      <i id="bottom_header">AOPChain : une traçabilité de vos produits agricoles du producteur au consommateur</i>
+    </header>
+
+    <div id="menu">
+
+      <ul id="onglets">
+        <li class="active"><a href="Accueil.html"> Accueil </a></li>
+        <li><a href="Forums.html"> Producteur </a></li>
+        <li><a href="Livre_or.html"> Transformateur </a></li>
+        <li><a href="Equipe.html"> Régulateur </a></li>
+        <li><a href="Inscription.html"> Explorateur </a></li>
+        <li><a href="Connexion.html"> Etat du réseau </a></li>
+      </ul>
+    </div>
+    
+
+    <div id="body">
+      <div class="form-group">
+        <label>Toutes les olives déclarées</label>
+        <p><input id="queryAllTuna" type="submit" value="Query" class="btn btn-primary" ng-click="queryAllTuna()"></p>
+      </div>
+ 
+      <table id="all_tuna" class="table" align="center">
+
+        <tr>
+          <th>Identifiant</th>
+          <th>Localisation</th>
+          <th>Producteur</th>
+          <th>Localisation <br>(Longitude, Latitude)</th>
+          <th>Quantité</th>
+        </tr>
+
+        <tr ng-repeat="tuna in all_tuna">
+          <td>{{tuna.Key}}</td>
+          <td>{{tuna.timestamp}}</td>
+          <td>{{tuna.holder}}</td>
+          <td>{{tuna.location}}</td>
+          <td>{{tuna.vessel}}</td>
+        </tr>
+      </table>
+
+      <div class="form-group">
+        <label>Requête sur une production d'olives particulières </label><br>
+        <h5 style="color:red;margin-bottom:2%" id="error_query">Error: Please enter a valid Tuna Id</h5>
+        
+        Enter un identifiant de production : <input id="createName" class="form-control" type="text" placeholder="Ex: 3" ng-model="tuna_id">
+        <input id="querySubmit" type="submit" value="Query" class="btn btn-primary" ng-click="queryTuna()">
+      </div>
+
+      <table id="query_tuna" class="table" align="center">
+
+        <tr>
+          <th>Timestamp</th>
+          <th>Holder</th>
+          <th>Catch Location <br>(Longitude, Latitude)</th>
+          <th>Vessel</th>
+        </tr>
+
+        <tr>
+          <td>{{query_tuna.timestamp}}</td>
+          <td>{{query_tuna.holder}}</td>
+          <td>{{query_tuna.location}}</td>
+          <td>{{query_tuna.vessel}}</td>
+        </tr>
+      </table>
+
+<div class="form-group">
+        <label>Toutes les olives déclarées</label>
+        <p><input id="queryAllTuna" type="submit" value="Query" class="btn btn-primary" ng-click="queryAllTuna()"></p>
+      </div>
+ 
+      <table id="all_tuna" class="table" align="center">
+
+        <tr>
+          <th>Identifiant</th>
+          <th>Localisation</th>
+          <th>Producteur</th>
+          <th>Localisation <br>(Longitude, Latitude)</th>
+          <th>Quantité</th>
+        </tr>
+
+        <tr ng-repeat="tuna in all_tuna">
+          <td>{{tuna.Key}}</td>
+          <td>{{tuna.timestamp}}</td>
+          <td>{{tuna.holder}}</td>
+          <td>{{tuna.location}}</td>
+          <td>{{tuna.vessel}}</td>
+        </tr>
+      </table>
+
+      <div class="form-group">
+        <label>Requête sur une production d'olives particulières </label><br>
+        <h5 style="color:red;margin-bottom:2%" id="error_query">Error: Please enter a valid Tuna Id</h5>
+        
+        Enter un identifiant de production : <input id="createName" class="form-control" type="text" placeholder="Ex: 3" ng-model="tuna_id">
+        <input id="querySubmit" type="submit" value="Query" class="btn btn-primary" ng-click="queryTuna()">
+      </div>
+
+      <table id="query_tuna" class="table" align="center">
+
+        <tr>
+          <th>Timestamp</th>
+          <th>Holder</th>
+          <th>Catch Location <br>(Longitude, Latitude)</th>
+          <th>Vessel</th>
+        </tr>
+
+        <tr>
+          <td>{{query_tuna.timestamp}}</td>
+          <td>{{query_tuna.holder}}</td>
+          <td>{{query_tuna.location}}</td>
+          <td>{{query_tuna.vessel}}</td>
+        </tr>
+      </table>
+
+      <div class="form-group">
+        <label>Create Tuna Record</label>
+        <h5 style="color:green;margin-bottom:2%" id="success_create">Success! Tx ID: {{create_tuna}}</h5>
+        <br>
+        Enter catch id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="tuna.id">
+        Enter name of vessel: <input class="form-control" type="text" placeholder="Ex: 0239L" ng-model="tuna.vessel">
+        Enter longitude: <input id="createName" class="form-control" type="text" placeholder="Ex: 28.012" ng-model="tuna.longitude"> 
+        Enter latitude: <input id="createName" class="form-control" type="text" placeholder="Ex: 150.405" ng-model="tuna.latitude">
+        Enter timestamp: <input class="form-control" type="text" placeholder="Ex: 4982342301" ng-model="tuna.timestamp">
+        Enter name of holder: <input class="form-control" type="text" placeholder="Ex: Hansel" ng-model="tuna.holder">
+        <input id="createSubmit" type="submit" value="Create" class="btn btn-primary" ng-click="recordTuna()"> 
+      </div>
+
+      <div class="form-group">
+        <label>Change Tuna Holder</label><br>
+        <h5 style="color:green;margin-bottom:2%" id="success_holder">Success! Tx ID: {{change_holder}}</h5>
+        <h5 style="color:red;margin-bottom:2%" id="error_holder">Error: Please enter a valid Tuna Id</h5>
+        Enter a catch id between 1 and 10: <input class="form-control" name="assetSelect" placeholder="Ex: 1" ng-model="holder.id">
+        Enter name of new holder: <input class="form-control" name="assetSelect" placeholder="Ex: Barry" ng-model="holder.name">
+        <input id="transferSubmit" type="submit" value="Change" class="btn btn-primary" ng-click="changeHolder()">
+      </div>
+
+    </div>
+  </body>
+    <!-- requiring the angular page -->
+    <script type="text/javascript" src="app.js"> </script>
+
+
+</html>
